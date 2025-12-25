@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { me } from "../api/auth";
 import type { MeResponse } from "../api/auth";
+import ProfessorPanel from "./ProfessorPanel";
+import StudentPanel from "./StudentPanel";
+
+const ROLE_STUDENT = 1;
+const ROLE_PROFESSOR = 2;
+
 
 export default function Dashboard() {
   const [role, setRole] = useState<number | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
   const [user, setUser] = useState<MeResponse | null>(null);
   useEffect(() => {
     me()
       .then(res => {
         console.log("current user: ", res.data);
         setRole(res.data.role);
-        setUserId(res.data.id);
         setUser(res.data);
       })
       .catch(() => {
@@ -22,10 +26,14 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Hi, {user?.name}</p>
-      <p>Welcome to Conductor 👋</p>
-      <p>Current user id: {userId}</p>
-      <p>Current user role: {role === 1 ? "Admin" : role === 2 ? "Professor" : "Student"}</p>
+      {user && (
+        <>
+          <p>Welcome, {user.name}</p>
+          <p>Your role is {role === ROLE_STUDENT ? "Student" : "Professor"}</p>
+        </>
+      )}
+      {role == ROLE_PROFESSOR && <ProfessorPanel />}
+      {role == ROLE_STUDENT && <StudentPanel />}
     </div>
   );
 }
