@@ -14,6 +14,8 @@ export function login(email: string, password: string): Promise<AxiosResponse<Lo
 }
 
 export interface MeResponse {
+  name: string;
+  email: string;
   id: number;
   role: number;
 }
