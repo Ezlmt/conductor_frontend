@@ -20,6 +20,16 @@ export interface MeResponse {
   role: number;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: number;
+}
+
+export function register(data: RegisterRequest) {
+  return client.post('/users/register', data);
+}
 export function me() {
   return client.get<MeResponse>('/me');
 }
