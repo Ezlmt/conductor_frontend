@@ -23,6 +23,10 @@ export default function Dashboard() {
       });
   }, []);
 
+  if (role === null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -33,7 +37,9 @@ export default function Dashboard() {
         </>
       )}
       {role == ROLE_PROFESSOR && <ProfessorPanel />}
-      {role == ROLE_STUDENT && <StudentPanel />}
+      {role == ROLE_STUDENT && (
+        <StudentPanel />
+      )}
     </div>
   );
 }
