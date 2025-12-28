@@ -32,3 +32,7 @@ export function leaveCourse(id: number) {
 export function getEnrolledCourses() {
   return client.get(`/courses/enrolled`);
 }
+
+export function getCourseDeleteInfo(id: number) {
+  return client.get(`/courses/${id}/delete-info`);
+}

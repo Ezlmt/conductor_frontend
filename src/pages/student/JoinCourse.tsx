@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { joinCourse } from "../api/course";
+import { joinCourse } from "../../api/course";
 import { AxiosError } from "axios";
 
 export default function JoinCourse() {
@@ -9,7 +9,7 @@ export default function JoinCourse() {
   const handleJoinCourse = async () => {
     try {
       await joinCourse({ code: courseCode });
-      navigate('/courses');
+      navigate('/student/courses');
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 400) {
         alert(error.response?.data.message);
@@ -17,7 +17,7 @@ export default function JoinCourse() {
         console.error("fail to join course", error);
         alert("An unexpected error occurred while joining the course");
       }
-      navigate('/courses');
+      navigate('/student/courses');
     }
   }
   return (

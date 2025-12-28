@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { me } from "../api/auth";
 import type { MeResponse } from "../api/auth";
-import ProfessorPanel from "./ProfessorPanel";
-import StudentPanel from "./StudentPanel";
+import ProfessorPanel from "./professor/ProfessorPanel";
+import StudentPanel from "./student/StudentPanel";
 
 const ROLE_STUDENT = 1;
 const ROLE_PROFESSOR = 2;
@@ -33,7 +33,6 @@ export default function Dashboard() {
       {user && (
         <>
           <p>Welcome, {user.name}</p>
-          <p>Your role is {role === ROLE_STUDENT ? "Student" : "Professor"}</p>
         </>
       )}
       {role == ROLE_PROFESSOR && <ProfessorPanel />}
