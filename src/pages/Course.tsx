@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCourses, deleteCourse } from "../api/course";
+import { getCourses, deleteCourse, getEnrolledCourses, leaveCourse } from "../api/course";
 import { useNavigate } from "react-router-dom";
 import { me } from "../api/auth";
 
@@ -26,11 +26,32 @@ export default function Course() {
       console.error("fail to delete course", error);
     }
   }
+  const handleLeaveCourse = async (id: number) => {
+    try {
+      await leaveCourse(id);
+      setCourses(courses.filter(course => course.id !== id));
+    } catch (error) {
+      console.error("fail to leave course", error);
+      alert("fail to leave course");
+    } finally {
+      navigate('/courses');
+    }
+  }
   useEffect(() => {
-    getCourses()
+    me()
+      .then(res => {
+        const role = res.data.role;
+        setRole(role);
+        if (role === ROLE_STUDENT) {
+          return getEnrolledCourses();
+        } else if (role === ROLE_PROFESSOR) {
+          return getCourses();
+        } else {
+          throw new Error("Invalid role");
+        }
+      })
       .then(res => {
         setCourses(res.data.courses);
-        console.log("role: ", role);
       })
       .catch(err => {
         console.error("fail to load courses", err);
@@ -38,14 +59,7 @@ export default function Course() {
       .finally(() => {
         setLoading(false);
       });
-    me()
-      .then(res => {
-        setRole(res.data.role);
-      }).catch(() => {
-        console.error("fail to load role");
-      });
   }, []);
-  console.log("courses: ", courses);
 
   return (
     <div>
@@ -64,7 +78,13 @@ export default function Course() {
       )}
       {role === ROLE_STUDENT && (
         <ul>
-          <li>You are a student, you can't delete courses</li>
+          {
+            courses.map(course => (
+              <li key={course.id}>
+                <strong>{course.name}</strong> ({course.code}) <button onClick={() => handleLeaveCourse(course.id)}>Leave</button>
+              </li>
+            ))
+          }
         </ul>
       )}
     </div>
