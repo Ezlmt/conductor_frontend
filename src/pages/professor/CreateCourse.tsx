@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createCourse } from "../api/course";
+import { createCourse } from "../../api/course";
+import axios from "axios";
+
 
 export default function CreateCourse() {
   const [name, setName] = useState('');
@@ -9,10 +11,15 @@ export default function CreateCourse() {
   const handleCreateCourse = async () => {
     try {
       await createCourse({ name, code });
-      navigate('/courses');
+      navigate('/professor/courses');
     } catch (error) {
-      console.error("fail to create course", error);
-      alert("fail to create course");
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data.message || "Failed to create course";
+        alert(message);
+      } else {
+        alert("An unexpected error occurred while creating the course");
+      }
     }
   }
   return (
