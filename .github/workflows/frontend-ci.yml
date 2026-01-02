@@ -28,3 +28,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: Ezlmt/conductor_backend
+          ref: main
+          path: backend
